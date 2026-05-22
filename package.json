@@ -1,0 +1,13 @@
+{
+  "name": "egeaydin-portfolio",
+  "version": "1.0.0",
+  "description": "Ege Aydın — Personal Portfolio",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "PORT=7777 node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
