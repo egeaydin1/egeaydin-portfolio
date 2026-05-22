@@ -1110,7 +1110,7 @@
             <div className="project-stack reveal d3">
               {p.stack.map((s) => <span className="chip" key={s}>{s}</span>)}
             </div>
-            <a className="ulink reveal d4" href="#">
+            <a className="ulink reveal d4" href={`https://${p.link}`} target="_blank" rel="noopener noreferrer">
               {p.link} <span className="arrow">↗</span>
             </a>
           </div>
@@ -1266,9 +1266,9 @@
               <a className="contact-email" href="mailto:aydin.ege90@gmail.com">aydin.ege90@gmail.com →</a>
             </div>
             <div className="contact-links reveal d4">
-              <a className="ulink" href="https://github.com/egeaydin1">GitHub <span className="arrow">↗</span></a>
-              <a className="ulink" href="https://www.linkedin.com/in/egeaydin1/">LinkedIn <span className="arrow">↗</span></a>
-              <a className="ulink" href="https://42istanbul.com.tr/">42 Istanbul <span className="arrow">↗</span></a>
+              <a className="ulink" href="https://github.com/egeaydin1" target="_blank" rel="noopener noreferrer">GitHub <span className="arrow">↗</span></a>
+              <a className="ulink" href="https://www.linkedin.com/in/egeaydin1/" target="_blank" rel="noopener noreferrer">LinkedIn <span className="arrow">↗</span></a>
+              <a className="ulink" href="https://42istanbul.com.tr/" target="_blank" rel="noopener noreferrer">42 Istanbul <span className="arrow">↗</span></a>
               <a className="ulink" href="tel:+905388319554">+90 538 831 95 54</a>
             </div>
           </div>
