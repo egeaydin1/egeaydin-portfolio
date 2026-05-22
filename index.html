@@ -192,6 +192,9 @@
   /* Reveal */
   .reveal { opacity: 0; transform: translateY(36px); transition: opacity 1100ms cubic-bezier(.2,.7,.2,1), transform 1100ms cubic-bezier(.2,.7,.2,1); }
   .reveal.in { opacity: 1; transform: translateY(0); }
+  /* Fotoğraf/medya kutuları için: daha az kayma, hafif scale */
+  .project-media.reveal, .about-photo.reveal { transform: translateY(24px) scale(0.98); }
+  .project-media.reveal.in, .about-photo.reveal.in { opacity: 1; transform: translateY(0) scale(1); }
   .reveal.d1 { transition-delay: 80ms; }
   .reveal.d2 { transition-delay: 160ms; }
   .reveal.d3 { transition-delay: 240ms; }
@@ -1108,7 +1111,7 @@
       return (
         <article className={`project ${reverse ? 'reverse' : ''}`}>
           <div className="project-index">{p.index} / 04</div>
-          <div className="project-media clip-reveal">
+          <div className="project-media reveal">
             <Art />
             <span className="project-media-label">{p.label}</span>
           </div>
@@ -1156,7 +1159,7 @@
           <div className="container">
             <div className="eyebrow reveal">About</div>
             <div className="about-grid">
-              <div className="about-photo clip-reveal">
+              <div className="about-photo reveal">
                 <img src="/ege.jpg" alt="Ege Aydın"
                   style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',objectPosition:'center 15%',display:'block'}}/>
               </div>
