@@ -11,117 +11,91 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
   :root {
-    --bg-1: #2a2d31;   /* anthracite */
-    --bg-2: #131417;   /* near-black */
-    --bg-3: #0a0a0c;   /* black */
+    --bg-1: #2a2d31;
+    --bg-2: #131417;
+    --bg-3: #0a0a0c;
     --ink: #ffffff;
     --ink-soft: rgba(255,255,255,0.6);
     --ink-faint: rgba(255,255,255,0.36);
     --hair: rgba(255,255,255,0.08);
     --hair-strong: rgba(255,255,255,0.16);
-    --accent: #ffffff;
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; color: var(--ink); }
-  html { background: var(--bg-2); }
+  html { background: var(--bg-2); scroll-behavior: smooth; }
   body {
     background:
       radial-gradient(120% 80% at 20% 0%, rgba(255,255,255,0.04), transparent 60%),
       radial-gradient(100% 80% at 80% 100%, rgba(255,255,255,0.025), transparent 50%),
       linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
     background-attachment: fixed;
-  }
-  body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
     letter-spacing: -0.011em;
     line-height: 1.5;
     overflow-x: hidden;
     cursor: none;
   }
-  @media (pointer: coarse) { body { cursor: auto; } .cursor { display: none !important; } }
-  ::selection { background: #ffffff; color: #0a0a0c; }
+  @media (pointer: coarse) { body { cursor: auto; } .cursor, .cursor-trail { display: none !important; } }
+  ::selection { background: #fff; color: #0a0a0c; }
   a, button { cursor: none; }
   @media (pointer: coarse) { a, button { cursor: pointer; } }
 
-  /* ============ CUSTOM CURSOR ============ */
+  /* ============ CURSOR ============ */
   .cursor {
     position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1000;
     width: 8px; height: 8px; border-radius: 50%;
-    background: #ffffff;
-    transform: translate(-50%, -50%);
-    transition: width 280ms cubic-bezier(.2,.7,.2,1), height 280ms cubic-bezier(.2,.7,.2,1),
-                background 280ms ease, mix-blend-mode 100ms;
+    background: #fff; transform: translate(-50%,-50%);
+    transition: width 280ms cubic-bezier(.2,.7,.2,1), height 280ms cubic-bezier(.2,.7,.2,1);
     mix-blend-mode: difference;
   }
-  .cursor.hover {
-    width: 64px; height: 64px;
-    background: #ffffff;
-  }
+  .cursor.hover { width: 64px; height: 64px; }
   .cursor-trail {
     position: fixed; top: 0; left: 0; pointer-events: none; z-index: 999;
     width: 36px; height: 36px; border-radius: 50%;
     border: 1px solid rgba(255,255,255,0.2);
-    transform: translate(-50%, -50%);
-    transition: transform 80ms linear, opacity 200ms;
+    transform: translate(-50%,-50%);
+  }
+
+  /* ============ SCROLL PROGRESS ============ */
+  .scroll-progress {
+    position: fixed; top: 0; left: 0; height: 2px; z-index: 60;
+    background: linear-gradient(90deg, rgba(255,255,255,0.9), rgba(255,255,255,0.5));
+    width: 0%;
   }
 
   /* ============ PRELOADER ============ */
   .pre {
     position: fixed; inset: 0; z-index: 200;
     background: linear-gradient(180deg, #1a1c1f 0%, #060608 100%);
-    color: #fff;
     display: flex; align-items: flex-end; justify-content: space-between;
     padding: 48px;
     font-family: 'JetBrains Mono', monospace;
     font-size: 12px; letter-spacing: 0.1em;
-    transition: transform 1100ms cubic-bezier(.85,0,.15,1) 200ms;
+    transition: transform 1000ms cubic-bezier(.85,0,.15,1) 150ms;
   }
   .pre.gone { transform: translateY(-100%); }
-  .pre-center {
-    position: absolute; left: 50%; top: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-  }
+  .pre-center { position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); text-align: center; }
   .pre-name {
-    font-family: 'Instrument Serif', serif;
-    font-size: clamp(56px, 12vw, 160px);
-    font-weight: 400;
-    font-style: italic;
-    letter-spacing: -0.04em;
-    line-height: 1;
-    color: #fff;
-    overflow: hidden;
+    font-family: 'Instrument Serif', serif; font-style: italic;
+    font-size: clamp(56px, 12vw, 160px); letter-spacing: -0.04em; line-height: 1;
   }
-  .pre-name .word {
-    display: inline-block; overflow: hidden;
-    vertical-align: bottom;
-  }
-  .pre-name .word span {
-    display: inline-block;
-    transform: translateY(110%);
-    animation: preRise 900ms cubic-bezier(.2,.7,.2,1) forwards;
-  }
-  .pre-name .word.w2 span { animation-delay: 200ms; }
+  .pre-name .word { display: inline-block; overflow: hidden; vertical-align: bottom; }
+  .pre-name .word span { display: inline-block; transform: translateY(110%); animation: preRise 800ms cubic-bezier(.2,.7,.2,1) forwards; }
+  .pre-name .word.w2 span { animation-delay: 160ms; }
   @keyframes preRise { to { transform: translateY(0); } }
-  .pre-num {
-    margin-top: 24px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; letter-spacing: 0.2em; opacity: 0.6;
-  }
+  .pre-num { margin-top: 24px; font-size: 11px; letter-spacing: 0.2em; opacity: 0.6; }
 
   /* ============ NAV ============ */
   .nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-    height: 64px;
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50; height: 64px;
     display: flex; align-items: center; justify-content: center;
-    transition: background 300ms ease, backdrop-filter 300ms ease, border-color 300ms ease;
+    transition: background 300ms, backdrop-filter 300ms, border-color 300ms;
     border-bottom: 1px solid transparent;
   }
   .nav.scrolled {
-    background: rgba(20, 21, 24, 0.55);
+    background: rgba(20,21,24,0.55);
     -webkit-backdrop-filter: saturate(180%) blur(20px);
     backdrop-filter: saturate(180%) blur(20px);
     border-bottom-color: rgba(255,255,255,0.08);
@@ -133,35 +107,27 @@
   }
   .nav-logo {
     font-family: 'Instrument Serif', serif; font-style: italic;
-    font-size: 22px; letter-spacing: -0.02em;
-    text-decoration: none; color: var(--ink);
+    font-size: 22px; letter-spacing: -0.02em; text-decoration: none; color: var(--ink);
     white-space: nowrap;
   }
   .nav-links {
     display: flex; gap: 4px; align-items: center;
     background: rgba(255,255,255,0.06);
     border: 1px solid rgba(255,255,255,0.08);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    padding: 6px;
-    border-radius: 999px;
+    -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+    padding: 6px; border-radius: 999px;
   }
   .nav-link {
-    color: var(--ink); text-decoration: none;
-    padding: 8px 16px; border-radius: 999px;
-    font-size: 13px; font-weight: 500;
-    transition: background 240ms ease, color 240ms ease;
+    color: var(--ink); text-decoration: none; padding: 8px 16px; border-radius: 999px;
+    font-size: 13px; font-weight: 500; transition: background 240ms;
   }
   .nav-link:hover { background: rgba(255,255,255,0.1); }
   .nav-time {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; color: var(--ink-soft);
-    letter-spacing: 0.05em;
-    display: flex; align-items: center; gap: 6px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-soft);
+    letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;
   }
   .nav-time .dot {
     width: 6px; height: 6px; border-radius: 50%; background: #34c759;
-    box-shadow: 0 0 0 0 rgba(52,199,89,0.6);
     animation: pulse 1.8s ease-out infinite;
   }
   @keyframes pulse {
@@ -169,95 +135,72 @@
     100% { box-shadow: 0 0 0 10px rgba(52,199,89,0); }
   }
   @media (max-width: 980px) { .nav-time { display: none; } }
-  @media (max-width: 720px) {
-    .nav-link.hide-sm { display: none; }
-    .nav-inner { padding: 0 24px; }
-  }
+  @media (max-width: 720px) { .nav-link.hide-sm { display: none; } .nav-inner { padding: 0 24px; } }
 
   /* ============ SHARED ============ */
   .container { max-width: 1240px; margin: 0 auto; padding: 0 40px; }
   .eyebrow {
-    font-size: 12px; font-weight: 500; letter-spacing: 0.14em;
-    text-transform: uppercase; color: var(--ink-soft);
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-size: 12px; font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--ink-soft); font-family: 'JetBrains Mono', monospace;
     display: inline-flex; align-items: center; gap: 10px;
   }
-  .eyebrow::before {
-    content: ""; width: 18px; height: 1px; background: currentColor;
-  }
+  .eyebrow::before { content: ""; width: 18px; height: 1px; background: currentColor; }
   h1, h2, h3 { margin: 0; letter-spacing: -0.035em; line-height: 1.05; font-weight: 700; }
   p { margin: 0; }
   .serif { font-family: 'Instrument Serif', serif; font-weight: 400; font-style: italic; letter-spacing: -0.02em; }
 
-  /* Reveal */
   .reveal { opacity: 0; transform: translateY(36px); transition: opacity 1100ms cubic-bezier(.2,.7,.2,1), transform 1100ms cubic-bezier(.2,.7,.2,1); }
   .reveal.in { opacity: 1; transform: translateY(0); }
-  /* Fotoğraf/medya kutuları için: daha az kayma, hafif scale */
-  .project-media.reveal, .about-photo.reveal { transform: translateY(24px) scale(0.98); }
-  .project-media.reveal.in, .about-photo.reveal.in { opacity: 1; transform: translateY(0) scale(1); }
-  .reveal.d1 { transition-delay: 80ms; }
-  .reveal.d2 { transition-delay: 160ms; }
-  .reveal.d3 { transition-delay: 240ms; }
-  .reveal.d4 { transition-delay: 320ms; }
-  .reveal.d5 { transition-delay: 400ms; }
-  .reveal.d6 { transition-delay: 480ms; }
+  .reveal.d1 { transition-delay: 80ms; } .reveal.d2 { transition-delay: 160ms; }
+  .reveal.d3 { transition-delay: 240ms; } .reveal.d4 { transition-delay: 320ms; }
+  .media-reveal { opacity: 0; transform: translateY(24px) scale(0.97); transition: opacity 1200ms cubic-bezier(.2,.7,.2,1), transform 1200ms cubic-bezier(.2,.7,.2,1); }
+  .media-reveal.in { opacity: 1; transform: translateY(0) scale(1); }
 
-  /* Word-by-word mask reveal */
   .mask-row { overflow: hidden; line-height: 1.05; }
-  .mask-row > span {
-    display: inline-block;
-    transform: translateY(110%);
-    transition: transform 1100ms cubic-bezier(.2,.7,.2,1);
-    will-change: transform;
-  }
+  .mask-row > span { display: inline-block; transform: translateY(110%); transition: transform 1100ms cubic-bezier(.2,.7,.2,1); }
   .mask-row.in > span { transform: translateY(0); }
 
   @media (prefers-reduced-motion: reduce) {
-    .reveal, .mask-row > span { opacity: 1; transform: none; transition: none; }
+    .reveal, .media-reveal, .mask-row > span { opacity: 1; transform: none; transition: none; }
   }
 
-  /* Buttons */
+  /* Buttons — magnetic */
   .btn-row { display: inline-flex; gap: 14px; flex-wrap: wrap; }
   .btn {
     appearance: none; border: 1px solid rgba(255,255,255,0.25);
     background: transparent; color: var(--ink);
     height: 52px; padding: 0 26px; border-radius: 999px;
     font: inherit; font-size: 14px; font-weight: 500;
-    display: inline-flex; align-items: center; gap: 10px;
-    text-decoration: none;
-    transition: transform 240ms cubic-bezier(.2,.7,.2,1), background 240ms ease, border-color 240ms ease, color 240ms ease;
+    display: inline-flex; align-items: center; gap: 10px; text-decoration: none;
+    transition: color 240ms, border-color 240ms;
     position: relative; overflow: hidden;
+    will-change: transform;
   }
   .btn::before {
-    content: ""; position: absolute; inset: 0;
-    background: #ffffff;
-    transform: translateY(101%);
-    transition: transform 480ms cubic-bezier(.85,0,.15,1);
-    z-index: 0;
+    content: ""; position: absolute; inset: 0; background: #fff;
+    transform: translateY(101%); transition: transform 480ms cubic-bezier(.85,0,.15,1); z-index: 0;
   }
   .btn:hover::before { transform: translateY(0); }
-  .btn:hover { color: #0a0a0c; border-color: #ffffff; }
+  .btn:hover { color: #0a0a0c; border-color: #fff; }
   .btn > * { position: relative; z-index: 1; }
-  .btn.primary { background: #ffffff; color: #0a0a0c; border-color: #ffffff; }
+  .btn.primary { background: #fff; color: #0a0a0c; border-color: #fff; }
   .btn.primary::before { background: transparent; }
-  .btn.primary:hover { background: transparent; color: #ffffff; border-color: #ffffff; }
+  .btn.primary:hover { background: transparent; color: #fff; }
   .btn .arrow { transition: transform 320ms cubic-bezier(.2,.7,.2,1); display: inline-flex; }
   .btn:hover .arrow { transform: translateX(4px); }
 
-  /* underline link */
   .ulink {
     color: var(--ink); text-decoration: none; position: relative;
     display: inline-block; padding-bottom: 2px;
   }
   .ulink::after {
-    content: ""; position: absolute; left: 0; bottom: 0; height: 1px;
-    width: 100%; background: currentColor;
-    transform: scaleX(0); transform-origin: left center;
+    content: ""; position: absolute; left: 0; bottom: 0; height: 1px; width: 100%;
+    background: currentColor; transform: scaleX(0); transform-origin: left center;
     transition: transform 420ms cubic-bezier(.2,.7,.2,1);
   }
   .ulink:hover::after { transform: scaleX(1); }
-  .ulink .arrow { display: inline-block; transition: transform 320ms cubic-bezier(.2,.7,.2,1); margin-left: 4px; }
-  .ulink:hover .arrow { transform: translate(3px, -3px); }
+  .ulink .arrow { display: inline-block; transition: transform 320ms; margin-left: 4px; }
+  .ulink:hover .arrow { transform: translate(3px,-3px); }
 
   /* ============ HERO ============ */
   .hero {
@@ -265,88 +208,47 @@
     display: flex; flex-direction: column; justify-content: center;
     position: relative; overflow: hidden;
   }
-  .hero-bg {
-    position: absolute; inset: 0; pointer-events: none;
-    background-image:
-      radial-gradient(circle at var(--mx, 50%) var(--my, 30%),
-        rgba(255,255,255,0.08) 0%,
-        rgba(255,255,255,0.03) 30%,
-        transparent 60%);
-    transition: background 600ms ease;
+  .hero-photo {
+    position: absolute; inset: -10% 0; pointer-events: none;
+    background-image: url('/hero-bg.jpg');
+    background-size: cover; background-position: center;
+    opacity: 0.55;
+    will-change: transform;
   }
-  .hero-grid {
-    position: absolute; inset: 0; pointer-events: none; opacity: 0.7;
-    background-image:
-      linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
-    background-size: 80px 80px;
-    mask-image: radial-gradient(circle at center, #000 30%, transparent 80%);
-    -webkit-mask-image: radial-gradient(circle at center, #000 30%, transparent 80%);
+  .hero-photo::after {
+    content: ""; position: absolute; inset: 0;
+    background:
+      linear-gradient(180deg, rgba(19,20,23,0.3) 0%, rgba(19,20,23,0.05) 35%, rgba(19,20,23,0.75) 85%, #131417 100%),
+      radial-gradient(90% 70% at 50% 40%, transparent 40%, rgba(19,20,23,0.55) 100%);
   }
-  .hero-inner {
-    position: relative; z-index: 2;
-    width: 100%; max-width: 1240px; padding: 0 40px;
-    margin: 0 auto;
-  }
+  .hero-inner { position: relative; z-index: 2; width: 100%; max-width: 1240px; padding: 0 40px; margin: 0 auto; }
   .hero-top {
     display: flex; justify-content: space-between; align-items: flex-end;
-    margin-bottom: 60px;
-    flex-wrap: wrap; gap: 24px;
+    margin-bottom: 60px; flex-wrap: wrap; gap: 24px;
   }
   .hero-tag {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
-    color: var(--ink-soft);
-    display: flex; flex-direction: column; gap: 6px;
-    max-width: 220px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-soft);
+    display: flex; flex-direction: column; gap: 6px; max-width: 240px;
   }
   .hero-tag > span { display: block; }
-  .hero-tag .num { font-size: 11px; color: var(--ink-faint); }
-
+  .hero-tag .num { color: var(--ink-faint); }
   .hero-headline {
-    font-size: clamp(56px, 11vw, 180px);
-    font-weight: 700;
-    letter-spacing: -0.05em;
-    line-height: 0.92;
-    margin: 0;
+    font-size: clamp(56px, 11vw, 180px); font-weight: 700;
+    letter-spacing: -0.05em; line-height: 0.92; margin: 0;
+    text-shadow: 0 4px 60px rgba(0,0,0,0.5);
   }
   .hero-headline .row { display: block; }
-  .hero-headline .serif {
-    font-weight: 400;
-    color: var(--ink-soft);
-  }
+  .hero-headline .serif { font-weight: 400; color: var(--ink-soft); }
 
-  /* Word rotator */
-  .rotator {
-    display: inline-block; position: relative;
-    vertical-align: baseline;
-    height: 1em;
-    overflow: hidden;
-  }
-  .rotator-track {
-    display: inline-block;
-    transition: transform 720ms cubic-bezier(.85,0,.15,1);
-  }
-  .rotator-word {
-    display: block; line-height: 1;
-  }
+  .rotator { display: inline-block; position: relative; vertical-align: bottom; height: 1em; overflow: hidden; }
+  .rotator-track { display: inline-block; transition: transform 720ms cubic-bezier(.85,0,.15,1); }
+  .rotator-word { display: block; line-height: 1; }
 
-  .hero-bottom {
-    margin-top: 60px;
-    display: grid;
-    grid-template-columns: 1.2fr 1fr;
-    gap: 60px;
-    align-items: end;
-  }
+  .hero-bottom { margin-top: 60px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; align-items: end; }
   .hero-sub {
-    font-size: clamp(18px, 1.6vw, 22px);
-    color: var(--ink);
-    max-width: 460px;
-    line-height: 1.45;
-    font-family: 'Instrument Serif', serif;
-    font-style: italic;
-    font-weight: 400;
-    letter-spacing: -0.01em;
+    font-size: clamp(18px, 1.6vw, 22px); max-width: 460px; line-height: 1.45;
+    font-family: 'Instrument Serif', serif; font-style: italic;
   }
   .hero-sub strong { font-family: 'Inter', sans-serif; font-style: normal; font-weight: 600; }
   .hero-actions { justify-self: end; display: flex; flex-direction: column; gap: 20px; align-items: flex-end; }
@@ -357,130 +259,73 @@
 
   .hero-marquee {
     margin-top: 100px;
-    border-top: 1px solid var(--hair);
-    border-bottom: 1px solid var(--hair);
-    padding: 22px 0;
-    overflow: hidden;
-    position: relative;
+    border-top: 1px solid var(--hair); border-bottom: 1px solid var(--hair);
+    padding: 22px 0; overflow: hidden; position: relative; z-index: 2;
   }
-  .marquee-track {
-    display: flex; gap: 60px;
-    animation: marquee 38s linear infinite;
-    width: max-content;
-  }
+  .marquee-track { display: flex; gap: 60px; width: max-content; will-change: transform; }
   .marquee-item {
     font-family: 'Instrument Serif', serif; font-style: italic;
-    font-size: 22px; color: var(--ink);
-    display: flex; align-items: center; gap: 60px; flex-shrink: 0;
+    font-size: 22px; display: flex; align-items: center; gap: 60px; flex-shrink: 0;
   }
-  .marquee-item::after {
-    content: "✦"; font-style: normal; color: var(--ink-faint);
-    font-family: sans-serif; font-size: 14px;
-  }
-  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .marquee-item::after { content: "✦"; font-style: normal; color: var(--ink-faint); font-family: sans-serif; font-size: 14px; }
 
   /* ============ SECTION HEAD ============ */
   section { position: relative; }
-  .section-head {
-    display: grid; grid-template-columns: 1fr 2fr; gap: 60px;
-    align-items: end; margin-bottom: 100px;
-  }
-  .section-head h2 {
-    font-size: clamp(40px, 6vw, 84px);
-    letter-spacing: -0.04em;
-    line-height: 1;
-  }
+  .section-head { display: grid; grid-template-columns: 1fr 2fr; gap: 60px; align-items: end; margin-bottom: 100px; }
+  .section-head h2 { font-size: clamp(40px, 6vw, 84px); letter-spacing: -0.04em; line-height: 1; }
   .section-head h2 .serif { color: var(--ink-soft); }
-  .section-head .sub {
-    color: var(--ink-soft); font-size: 15px; line-height: 1.5;
-    max-width: 280px;
-  }
-  @media (max-width: 860px) {
-    .section-head { grid-template-columns: 1fr; gap: 24px; margin-bottom: 60px; }
-  }
+  @media (max-width: 860px) { .section-head { grid-template-columns: 1fr; gap: 24px; margin-bottom: 60px; } }
 
   /* ============ PROJECTS ============ */
   .projects { padding: 160px 0 80px; }
-
   .project {
     display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
-    align-items: center; padding: 80px 0;
-    position: relative;
+    align-items: center; padding: 80px 0; position: relative;
   }
   .project.reverse .project-media { order: 2; }
   .project.reverse .project-text { order: 1; }
-
   .project-index {
     position: absolute; top: 40px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px; color: var(--ink-faint);
-    letter-spacing: 0.2em;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: var(--ink-faint); letter-spacing: 0.2em;
   }
   .project:not(.reverse) .project-index { left: 0; }
   .project.reverse .project-index { right: 0; }
-
   .project-text .eyebrow { margin-bottom: 24px; }
-  .project-text h3 {
-    font-size: clamp(28px, 3.8vw, 48px);
-    letter-spacing: -0.035em; line-height: 1.05;
-    margin-bottom: 24px;
-  }
-  .project-text h3 .serif {
-    color: var(--ink-soft);
-    font-weight: 400;
-  }
-  .project-text p {
-    color: var(--ink-soft); font-size: 17px; line-height: 1.6; margin-bottom: 28px;
-    max-width: 480px;
-  }
-  .project-stack {
-    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px;
-  }
+  .project-text h3 { font-size: clamp(28px, 3.8vw, 48px); margin-bottom: 24px; }
+  .project-text h3 .serif { color: var(--ink-soft); }
+  .project-text p { color: var(--ink-soft); font-size: 17px; line-height: 1.6; margin-bottom: 28px; max-width: 480px; }
+  .project-stack { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
   .chip {
-    font-size: 12px; color: var(--ink-soft);
-    font-family: 'JetBrains Mono', monospace;
-    padding: 6px 14px;
-    background: rgba(255,255,255,0.06);
-    border: 1px solid var(--hair);
-    border-radius: 999px;
-    transition: background 240ms ease, color 240ms ease, border-color 240ms ease;
+    font-size: 12px; color: var(--ink-soft); font-family: 'JetBrains Mono', monospace;
+    padding: 6px 14px; background: rgba(255,255,255,0.06);
+    border: 1px solid var(--hair); border-radius: 999px;
+    transition: background 240ms, color 240ms, border-color 240ms;
   }
-  .chip:hover { background: #ffffff; color: #0a0a0c; border-color: #ffffff; }
+  .chip:hover { background: #fff; color: #0a0a0c; border-color: #fff; }
 
+  .tilt-wrap { perspective: 900px; }
   .project-media {
-    aspect-ratio: 4/5;
-    border-radius: 28px;
-    overflow: hidden;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--hair);
+    aspect-ratio: 4/5; border-radius: 28px; overflow: hidden;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--hair);
     position: relative;
-    transition: transform 700ms cubic-bezier(.2,.7,.2,1);
+    transition: transform 200ms ease-out, box-shadow 400ms;
+    transform-style: preserve-3d;
+    will-change: transform;
   }
-  .project-media .art {
-    width: 100%; height: 100%; display: block;
-    transition: transform 1200ms cubic-bezier(.2,.7,.2,1);
-  }
-  .project-media:hover .art { transform: scale(1.04); }
-
+  .project-media:hover { box-shadow: 0 30px 80px rgba(0,0,0,0.5); }
+  .project-media img { transition: transform 1200ms cubic-bezier(.2,.7,.2,1); }
+  .project-media:hover img { transform: scale(1.05) !important; }
   .project-media-label {
-    position: absolute; top: 24px; left: 24px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; letter-spacing: 0.15em; text-transform: uppercase;
-    color: #ffffff;
-    background: rgba(20,21,24,0.55);
-    border: 1px solid rgba(255,255,255,0.12);
+    position: absolute; top: 24px; left: 24px; z-index: 2;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    background: rgba(20,21,24,0.55); border: 1px solid rgba(255,255,255,0.12);
     -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
     padding: 6px 12px; border-radius: 999px;
   }
-
-  /* Mask reveal for project media */
-  .clip-reveal { clip-path: inset(100% 0 0 0); transition: clip-path 1400ms cubic-bezier(.85,0,.15,1); }
-  .clip-reveal.in { clip-path: inset(0 0 0 0); }
-
   @media (max-width: 860px) {
-    .project, .project.reverse {
-      grid-template-columns: 1fr; gap: 36px; padding: 56px 0;
-    }
+    .project, .project.reverse { grid-template-columns: 1fr; gap: 36px; padding: 56px 0; }
     .project.reverse .project-media { order: 1; }
     .project.reverse .project-text { order: 2; }
     .project-media { aspect-ratio: 4/3; }
@@ -495,53 +340,24 @@
     pointer-events: none;
   }
   .about .container { position: relative; }
-  .about-grid {
-    display: grid; grid-template-columns: 5fr 7fr; gap: 80px;
-    align-items: start; margin-top: 80px;
-  }
+  .about-grid { display: grid; grid-template-columns: 5fr 7fr; gap: 80px; align-items: start; margin-top: 80px; }
   .about-photo {
-    aspect-ratio: 4/5;
-    border-radius: 28px;
-    overflow: hidden;
-    position: relative;
-    background: rgba(255,255,255,0.04);
-    border: 1px solid var(--hair);
+    aspect-ratio: 4/5; border-radius: 28px; overflow: hidden; position: relative;
+    background: rgba(255,255,255,0.04); border: 1px solid var(--hair);
   }
-  .about-photo .ph-label {
-    position: absolute; bottom: 20px; left: 20px;
-    color: var(--ink-faint); font-size: 11px;
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 0.1em; text-transform: uppercase;
-  }
-  .about-text h2 {
-    font-size: clamp(36px, 4.6vw, 60px);
-    margin-bottom: 40px;
-    color: var(--ink);
-  }
-  .about-text h2 .serif {
-    color: var(--ink-soft);
-    font-weight: 400;
-  }
-  .about-text p {
-    color: var(--ink-soft); font-size: 18px; line-height: 1.65;
-    margin-bottom: 22px; max-width: 560px;
-  }
+  .about-text h2 { font-size: clamp(36px, 4.6vw, 60px); margin-bottom: 40px; }
+  .about-text h2 .serif { color: var(--ink-soft); }
+  .about-text p { color: var(--ink-soft); font-size: 18px; line-height: 1.65; margin-bottom: 22px; max-width: 560px; }
   .about-text p strong { color: var(--ink); font-weight: 500; }
   .about-stats {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 40px; margin-top: 56px;
-    padding-top: 40px; border-top: 1px solid var(--hair);
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;
+    margin-top: 56px; padding-top: 40px; border-top: 1px solid var(--hair);
   }
-  .stat .n {
-    font-size: clamp(36px, 4.5vw, 52px); font-weight: 600;
-    letter-spacing: -0.035em; line-height: 1;
-    color: var(--ink);
-  }
+  .stat .n { font-size: clamp(36px, 4.5vw, 52px); font-weight: 600; letter-spacing: -0.035em; line-height: 1; }
   .stat .n .serif { color: var(--ink-soft); }
   .stat .l {
     font-size: 12px; color: var(--ink-faint); margin-top: 10px;
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 0.1em; text-transform: uppercase;
+    font-family: 'JetBrains Mono', monospace; letter-spacing: 0.1em; text-transform: uppercase;
   }
   @media (max-width: 860px) {
     .about-grid { grid-template-columns: 1fr; gap: 48px; }
@@ -551,48 +367,34 @@
 
   /* ============ SKILLS ============ */
   .skills { padding: 160px 0; }
-  .skills-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    margin-top: 24px;
-    border-top: 1px solid var(--hair);
-  }
+  .skills-grid { display: grid; grid-template-columns: repeat(4, 1fr); margin-top: 24px; border-top: 1px solid var(--hair); }
   .skill {
-    padding: 40px 24px;
-    border-bottom: 1px solid var(--hair);
-    border-right: 1px solid var(--hair);
+    padding: 40px 24px; border-bottom: 1px solid var(--hair); border-right: 1px solid var(--hair);
     display: flex; flex-direction: column; gap: 16px;
-    transition: background 360ms ease;
-    position: relative;
+    transition: background 360ms; position: relative; overflow: hidden;
   }
   .skill:nth-child(4n) { border-right: none; }
   .skill::before {
     content: ""; position: absolute; left: 0; top: 0; right: 0; height: 1px;
-    background: #ffffff;
-    transform: scaleX(0); transform-origin: left center;
+    background: #fff; transform: scaleX(0); transform-origin: left center;
     transition: transform 480ms cubic-bezier(.2,.7,.2,1);
   }
   .skill:hover { background: rgba(255,255,255,0.03); }
   .skill:hover::before { transform: scaleX(1); }
-  .skill-icon {
-    width: 40px; height: 40px;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--ink);
+  .skill-glow {
+    position: absolute; width: 220px; height: 220px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,255,255,0.08), transparent 70%);
+    pointer-events: none; opacity: 0; transition: opacity 300ms;
+    transform: translate(-50%,-50%);
   }
-  .skill h4 {
-    margin: 0; font-size: 16px; font-weight: 600;
-    letter-spacing: -0.01em;
-  }
-  .skill p {
-    font-size: 12px; color: var(--ink-soft);
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 0.05em;
-  }
+  .skill:hover .skill-glow { opacity: 1; }
+  .skill-icon { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+  .skill h4 { margin: 0; font-size: 16px; font-weight: 600; }
+  .skill p { font-size: 12px; color: var(--ink-soft); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.05em; }
   .skill .skill-num {
     position: absolute; top: 12px; right: 16px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; color: var(--ink-faint);
-    letter-spacing: 0.1em;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: var(--ink-faint); letter-spacing: 0.1em;
   }
   @media (max-width: 860px) {
     .skills-grid { grid-template-columns: repeat(2, 1fr); }
@@ -601,87 +403,59 @@
   }
 
   /* ============ CONTACT ============ */
-  .contact {
-    padding: 200px 0 220px;
-    text-align: center;
-    position: relative;
-    overflow: hidden;
+  .contact { padding: 220px 0 240px; text-align: center; position: relative; overflow: hidden; }
+  .contact-photo {
+    position: absolute; inset: -8% 0; pointer-events: none;
+    background-image: url('/contact-bg.jpg');
+    background-size: cover; background-position: center;
+    opacity: 0.7; will-change: transform;
   }
-  .contact-bg {
-    position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(circle at 50% 50%, rgba(255,255,255,0.05), transparent 60%);
+  .contact-photo::after {
+    content: ""; position: absolute; inset: 0;
+    background: linear-gradient(180deg, #131417 0%, rgba(19,20,23,0.2) 25%, rgba(19,20,23,0.2) 75%, #0a0a0c 100%);
   }
+  .contact .container { position: relative; z-index: 2; }
   .contact h2 {
-    font-size: clamp(56px, 12vw, 180px);
-    font-weight: 700;
-    letter-spacing: -0.05em;
-    line-height: 0.95;
-    margin-bottom: 36px;
-    position: relative;
+    font-size: clamp(56px, 12vw, 180px); font-weight: 700;
+    letter-spacing: -0.05em; line-height: 0.95; margin-bottom: 36px;
+    text-shadow: 0 4px 60px rgba(0,0,0,0.6);
   }
-  .contact h2 .serif {
-    color: var(--ink-soft);
-    font-weight: 400;
-  }
-  .contact p {
-    color: var(--ink-soft); font-size: 19px; max-width: 540px; margin: 0 auto 48px;
-    line-height: 1.6;
-  }
+  .contact h2 .serif { color: var(--ink-soft); font-weight: 400; }
+  .contact p { color: var(--ink-soft); font-size: 19px; max-width: 540px; margin: 0 auto 48px; line-height: 1.6; }
   .contact-email {
     font-family: 'Instrument Serif', serif; font-style: italic;
-    font-size: clamp(28px, 4vw, 44px);
-    color: var(--ink);
-    text-decoration: none;
-    display: inline-block;
-    position: relative;
-    padding: 8px 0;
-    margin-top: 24px;
+    font-size: clamp(28px, 4vw, 44px); color: var(--ink); text-decoration: none;
+    display: inline-block; position: relative; padding: 8px 0; margin-top: 24px;
   }
   .contact-email::after {
-    content: ""; position: absolute; left: 0; bottom: 0; right: 0;
-    height: 1px; background: currentColor;
-    transform: scaleX(0); transform-origin: left center;
+    content: ""; position: absolute; left: 0; bottom: 0; right: 0; height: 1px;
+    background: currentColor; transform: scaleX(0); transform-origin: left center;
     transition: transform 600ms cubic-bezier(.2,.7,.2,1);
   }
   .contact-email:hover::after { transform: scaleX(1); }
-  .contact-links {
-    margin-top: 80px; display: flex; gap: 40px; justify-content: center; flex-wrap: wrap;
-    font-size: 14px;
-  }
+  .contact-links { margin-top: 80px; display: flex; gap: 40px; justify-content: center; flex-wrap: wrap; font-size: 14px; }
 
   /* ============ FOOTER ============ */
   footer {
-    padding: 60px 0 80px;
-    border-top: 1px solid var(--hair);
-    color: var(--ink-faint);
-    font-size: 12px;
-    font-family: 'JetBrains Mono', monospace;
+    padding: 60px 0 80px; border-top: 1px solid var(--hair);
+    color: var(--ink-faint); font-size: 12px; font-family: 'JetBrains Mono', monospace;
   }
-  .footer-inner {
-    display: grid; grid-template-columns: 1fr 1fr 1fr;
-    gap: 24px; align-items: end;
-  }
+  .footer-inner { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; align-items: end; }
   .footer-name {
     font-family: 'Instrument Serif', serif; font-style: italic;
-    font-size: clamp(48px, 12vw, 140px);
-    color: var(--ink);
-    letter-spacing: -0.04em;
-    line-height: 0.9;
-    grid-column: 1 / -1;
-    margin-bottom: 40px;
+    font-size: clamp(48px, 12vw, 140px); color: var(--ink);
+    letter-spacing: -0.04em; line-height: 0.9;
+    grid-column: 1 / -1; margin-bottom: 40px;
   }
   .footer-name span { display: block; }
-  @media (max-width: 720px) {
-    .footer-inner { grid-template-columns: 1fr; }
-  }
+  @media (max-width: 720px) { .footer-inner { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
-  <!-- Custom cursor -->
   <div class="cursor" id="cursor"></div>
   <div class="cursor-trail" id="cursor-trail"></div>
+  <div class="scroll-progress" id="scrollProgress"></div>
 
-  <!-- Preloader -->
   <div class="pre" id="pre">
     <div>EGE.AYDIN / 2026</div>
     <div class="pre-center">
@@ -700,13 +474,12 @@
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
   <script>
-    // === Preloader counter ===
+    // === Preloader ===
     (function() {
       const numEl = document.getElementById('preNum');
       const pre = document.getElementById('pre');
-      let n = 0;
       const start = performance.now();
-      const dur = 1800;
+      const dur = 1500;
       let finished = false;
       function finish() {
         if (finished) return;
@@ -717,34 +490,28 @@
       }
       function tick(t) {
         const p = Math.min(1, (t - start) / dur);
-        n = Math.floor(p * 100);
-        numEl.textContent = n + '%';
+        numEl.textContent = Math.floor(p * 100) + '%';
         if (p < 1) requestAnimationFrame(tick);
-        else setTimeout(finish, 300);
+        else setTimeout(finish, 250);
       }
       requestAnimationFrame(tick);
-      // Safety net: if rAF is throttled (inactive tab etc.), force-finish
-      setTimeout(finish, 3500);
+      setTimeout(finish, 3200);
     })();
 
-    // === Custom cursor ===
+    // === Cursor ===
     (function() {
       const c = document.getElementById('cursor');
       const t = document.getElementById('cursor-trail');
-      let mx = window.innerWidth/2, my = window.innerHeight/2;
-      let tx = mx, ty = my;
-      window.addEventListener('mousemove', (e) => {
+      let mx = innerWidth/2, my = innerHeight/2, tx = mx, ty = my;
+      addEventListener('mousemove', (e) => {
         mx = e.clientX; my = e.clientY;
-        c.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
+        c.style.transform = `translate(${mx}px,${my}px) translate(-50%,-50%)`;
       });
-      function loop() {
-        tx += (mx - tx) * 0.18;
-        ty += (my - ty) * 0.18;
-        t.style.transform = `translate(${tx}px, ${ty}px) translate(-50%, -50%)`;
+      (function loop() {
+        tx += (mx - tx) * 0.18; ty += (my - ty) * 0.18;
+        t.style.transform = `translate(${tx}px,${ty}px) translate(-50%,-50%)`;
         requestAnimationFrame(loop);
-      }
-      loop();
-      // hover detection
+      })();
       document.addEventListener('mouseover', (e) => {
         if (e.target.closest('a, button, .skill, .project-media, .chip')) c.classList.add('hover');
       });
@@ -753,32 +520,28 @@
       });
     })();
 
-    // === Hero spotlight follows mouse ===
-    window.addEventListener('mousemove', (e) => {
-      const hero = document.querySelector('.hero-bg');
-      if (!hero) return;
-      const r = hero.getBoundingClientRect();
-      const x = ((e.clientX - r.left) / r.width) * 100;
-      const y = ((e.clientY - r.top) / r.height) * 100;
-      hero.style.setProperty('--mx', x + '%');
-      hero.style.setProperty('--my', y + '%');
-    });
+    // === Scroll progress ===
+    (function() {
+      const bar = document.getElementById('scrollProgress');
+      addEventListener('scroll', () => {
+        const h = document.documentElement;
+        const p = h.scrollTop / (h.scrollHeight - h.clientHeight);
+        bar.style.width = (p * 100) + '%';
+      }, { passive: true });
+    })();
   </script>
 
   <script type="text/babel" data-presets="react">
-    const { useEffect, useRef, useState, useMemo } = React;
+    const { useEffect, useRef, useState } = React;
 
     // ============ Reveal hook ============
     function useReveal() {
       useEffect(() => {
         const run = () => {
-          const els = document.querySelectorAll('.reveal, .mask-row, .clip-reveal');
+          const els = document.querySelectorAll('.reveal, .media-reveal, .mask-row');
           const io = new IntersectionObserver((entries) => {
             entries.forEach((e) => {
-              if (e.isIntersecting) {
-                e.target.classList.add('in');
-                io.unobserve(e.target);
-              }
+              if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
             });
           }, { threshold: 0.05, rootMargin: '0px 0px -4% 0px' });
           els.forEach((el) => io.observe(el));
@@ -788,6 +551,83 @@
       }, []);
     }
 
+    // ============ Parallax hook — translates el based on scroll ============
+    function useParallax(ref, speed) {
+      useEffect(() => {
+        const el = ref.current;
+        if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        let raf = null;
+        const onScroll = () => {
+          if (raf) return;
+          raf = requestAnimationFrame(() => {
+            raf = null;
+            const r = el.parentElement.getBoundingClientRect();
+            const progress = (r.top + r.height/2 - innerHeight/2) / innerHeight;
+            el.style.transform = `translateY(${progress * speed * 100}px)`;
+          });
+        };
+        onScroll();
+        addEventListener('scroll', onScroll, { passive: true });
+        return () => removeEventListener('scroll', onScroll);
+      }, []);
+    }
+
+    // ============ Magnetic hook — pulls el toward cursor ============
+    function useMagnetic(ref, strength = 0.3) {
+      useEffect(() => {
+        const el = ref.current;
+        if (!el || matchMedia('(pointer: coarse)').matches) return;
+        const onMove = (e) => {
+          const r = el.getBoundingClientRect();
+          const dx = e.clientX - (r.left + r.width/2);
+          const dy = e.clientY - (r.top + r.height/2);
+          el.style.transform = `translate(${dx*strength}px, ${dy*strength}px)`;
+        };
+        const onLeave = () => {
+          el.style.transition = 'transform 500ms cubic-bezier(.2,.7,.2,1)';
+          el.style.transform = 'translate(0,0)';
+          setTimeout(() => { el.style.transition = ''; }, 500);
+        };
+        el.addEventListener('mousemove', onMove);
+        el.addEventListener('mouseleave', onLeave);
+        return () => { el.removeEventListener('mousemove', onMove); el.removeEventListener('mouseleave', onLeave); };
+      }, []);
+    }
+
+    function MagneticBtn({ href, className, onClick, download, children }) {
+      const ref = useRef(null);
+      useMagnetic(ref, 0.25);
+      return (
+        <a ref={ref} href={href} className={className} onClick={onClick} download={download}>
+          {children}
+        </a>
+      );
+    }
+
+    // ============ Count-up stat ============
+    function CountUp({ to, suffix = '', duration = 1600 }) {
+      const ref = useRef(null);
+      const [val, setVal] = useState(0);
+      useEffect(() => {
+        const el = ref.current;
+        const io = new IntersectionObserver((entries) => {
+          if (!entries[0].isIntersecting) return;
+          io.disconnect();
+          const start = performance.now();
+          const tick = (t) => {
+            const p = Math.min(1, (t - start) / duration);
+            const eased = 1 - Math.pow(1 - p, 3);
+            setVal(Math.round(eased * to));
+            if (p < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+        }, { threshold: 0.5 });
+        io.observe(el);
+        return () => io.disconnect();
+      }, []);
+      return <span ref={ref}>{val}{suffix}</span>;
+    }
+
     // ============ Nav ============
     function Nav() {
       const [scrolled, setScrolled] = useState(false);
@@ -795,15 +635,14 @@
       useEffect(() => {
         const onScroll = () => setScrolled(window.scrollY > 16);
         onScroll();
-        window.addEventListener('scroll', onScroll, { passive: true });
+        addEventListener('scroll', onScroll, { passive: true });
         const tick = () => {
           const d = new Date();
-          const opts = { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/Istanbul' };
-          setTime('IST ' + d.toLocaleTimeString('en-GB', opts));
+          setTime('IST ' + d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false, timeZone: 'Europe/Istanbul' }));
         };
         tick();
         const i = setInterval(tick, 30000);
-        return () => { window.removeEventListener('scroll', onScroll); clearInterval(i); };
+        return () => { removeEventListener('scroll', onScroll); clearInterval(i); };
       }, []);
       const go = (id) => (e) => {
         e.preventDefault();
@@ -832,27 +671,17 @@
     // ============ Rotator ============
     function Rotator({ words, interval = 2200 }) {
       const [i, setI] = useState(0);
-      // measure widest word for stable layout
       const trackRef = useRef(null);
       const [maxW, setMaxW] = useState(null);
       useEffect(() => {
-        // measure
         const probe = document.createElement('span');
         const styles = getComputedStyle(trackRef.current || document.body);
-        probe.style.position = 'absolute';
-        probe.style.visibility = 'hidden';
-        probe.style.whiteSpace = 'nowrap';
+        probe.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap';
         probe.style.font = styles.font;
-        probe.style.fontFamily = styles.fontFamily;
-        probe.style.fontSize = styles.fontSize;
-        probe.style.fontWeight = styles.fontWeight;
         probe.style.letterSpacing = styles.letterSpacing;
         document.body.appendChild(probe);
         let mw = 0;
-        words.forEach((w) => {
-          probe.textContent = w;
-          mw = Math.max(mw, probe.getBoundingClientRect().width);
-        });
+        words.forEach((w) => { probe.textContent = w; mw = Math.max(mw, probe.getBoundingClientRect().width); });
         document.body.removeChild(probe);
         setMaxW(mw);
       }, []);
@@ -861,35 +690,84 @@
         return () => clearInterval(id);
       }, [words.length, interval]);
       return (
-        <span className="rotator" style={{ width: maxW ? `${maxW}px` : 'auto', verticalAlign: 'bottom' }}>
-          <span
-            ref={trackRef}
-            className="rotator-track"
-            style={{ transform: `translateY(-${i}em)` }}
-          >
-            {words.map((w, k) => (
-              <span className="rotator-word" key={k}>{w}</span>
-            ))}
+        <span className="rotator" style={{ width: maxW ? `${maxW}px` : 'auto' }}>
+          <span ref={trackRef} className="rotator-track" style={{ transform: `translateY(-${i}em)` }}>
+            {words.map((w, k) => <span className="rotator-word" key={k}>{w}</span>)}
           </span>
         </span>
       );
     }
 
+    // ============ Velocity marquee — speeds up with scroll ============
+    function VelocityMarquee({ items }) {
+      const trackRef = useRef(null);
+      useEffect(() => {
+        const track = trackRef.current;
+        if (!track) return;
+        let x = 0, vel = 0, lastY = scrollY, raf;
+        const onScroll = () => {
+          vel += Math.min(Math.abs(scrollY - lastY) * 0.06, 6);
+          lastY = scrollY;
+        };
+        addEventListener('scroll', onScroll, { passive: true });
+        const loop = () => {
+          vel *= 0.94;
+          x -= 0.6 + vel;
+          const half = track.scrollWidth / 2;
+          if (-x >= half) x += half;
+          track.style.transform = `translateX(${x}px)`;
+          raf = requestAnimationFrame(loop);
+        };
+        loop();
+        return () => { removeEventListener('scroll', onScroll); cancelAnimationFrame(raf); };
+      }, []);
+      return (
+        <div className="marquee-track" ref={trackRef}>
+          {[0,1].map((n) => (
+            <React.Fragment key={n}>
+              {items.map((it, k) => <span className="marquee-item" key={k}>{it}</span>)}
+            </React.Fragment>
+          ))}
+        </div>
+      );
+    }
+
     // ============ Hero ============
     function Hero() {
-      const ref = useRef(null);
-      // start animations after preloader
+      const bgRef = useRef(null);
       const [start, setStart] = useState(false);
       useEffect(() => {
         const onLoad = () => setTimeout(() => setStart(true), 100);
         if (document.body.dataset.loaded === '1') onLoad();
         else window.addEventListener('siteLoaded', onLoad, { once: true });
       }, []);
+      // Parallax + mouse drift on generated bg
+      useEffect(() => {
+        const el = bgRef.current;
+        if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        let sx = 0, mx = 0, my = 0, raf = null;
+        const apply = () => {
+          raf = null;
+          el.style.transform = `translateY(${sx * 0.35}px) translate(${mx}px,${my}px) scale(1.08)`;
+        };
+        const onScroll = () => { sx = scrollY; if (!raf) raf = requestAnimationFrame(apply); };
+        const onMouse = (e) => {
+          mx = (e.clientX / innerWidth - 0.5) * -18;
+          my = (e.clientY / innerHeight - 0.5) * -12;
+          if (!raf) raf = requestAnimationFrame(apply);
+        };
+        addEventListener('scroll', onScroll, { passive: true });
+        addEventListener('mousemove', onMouse);
+        return () => { removeEventListener('scroll', onScroll); removeEventListener('mousemove', onMouse); };
+      }, []);
+      useEffect(() => {
+        if (!start) return;
+        document.querySelectorAll('.hero .mask-row').forEach((el) => el.classList.add('in'));
+      }, [start]);
 
       return (
-        <section className="hero" id="top" ref={ref}>
-          <div className="hero-bg"></div>
-          <div className="hero-grid"></div>
+        <section className="hero" id="top">
+          <div className="hero-photo" ref={bgRef}></div>
           <div className="hero-inner">
             <div className="hero-top">
               <div className="hero-tag">
@@ -903,10 +781,8 @@
             </div>
 
             <h1 className="hero-headline">
-              <span className="row mask-row" data-on={start}>
-                <span>Building the future,</span>
-              </span>
-              <span className="row mask-row" data-on={start} style={{ transitionDelay: '120ms' }}>
+              <span className="row mask-row"><span>Building the future,</span></span>
+              <span className="row mask-row" style={{ transitionDelay: '120ms' }}>
                 <span><span className="serif">one</span> <Rotator words={['line', 'agent', 'prompt', 'system', 'idea']} />&nbsp;<span className="serif">at a time.</span></span>
               </span>
             </h1>
@@ -922,182 +798,161 @@
               <div className="hero-actions mask-row" style={{ transitionDelay: '440ms' }}>
                 <span>
                   <div className="btn-row">
-                    <a href="#work" className="btn primary" onClick={(e) => { e.preventDefault(); document.getElementById('work').scrollIntoView({behavior:'smooth'}); }}>
-                      <span>See the work</span>
-                      <span className="arrow">→</span>
-                    </a>
-                    <a href="#contact" className="btn" onClick={(e) => { e.preventDefault(); document.getElementById('contact').scrollIntoView({behavior:'smooth'}); }}>
+                    <MagneticBtn href="#work" className="btn primary" onClick={(e) => { e.preventDefault(); document.getElementById('work').scrollIntoView({behavior:'smooth'}); }}>
+                      <span>See the work</span><span className="arrow">→</span>
+                    </MagneticBtn>
+                    <MagneticBtn href="#contact" className="btn" onClick={(e) => { e.preventDefault(); document.getElementById('contact').scrollIntoView({behavior:'smooth'}); }}>
                       <span>Say hello</span>
-                    </a>
-                    <a href="/ege_aydin_cv.pdf" className="btn" download>
-                      <span>CV</span>
-                      <span className="arrow">↓</span>
-                    </a>
+                    </MagneticBtn>
+                    <MagneticBtn href="/ege_aydin_cv.pdf" className="btn" download>
+                      <span>CV</span><span className="arrow">↓</span>
+                    </MagneticBtn>
                   </div>
                 </span>
               </div>
             </div>
           </div>
 
-          {/* Auto-fire mask-row reveal on hero */}
-          <ManualRevealOnStart start={start} />
-
           <div className="hero-marquee">
-            <div className="marquee-track">
-              {Array(2).fill(0).map((_, i) => (
-                <React.Fragment key={i}>
-                  <span className="marquee-item">AI agents</span>
-                  <span className="marquee-item">healthcare systems</span>
-                  <span className="marquee-item">42 Istanbul</span>
-                  <span className="marquee-item">embedded curiosity</span>
-                  <span className="marquee-item">market research</span>
-                  <span className="marquee-item">building in public</span>
-                  <span className="marquee-item">Istanbul, Türkiye</span>
-                </React.Fragment>
-              ))}
-            </div>
+            <VelocityMarquee items={['AI agents','healthcare systems','42 Istanbul','embedded curiosity','market research','building in public','Istanbul, Türkiye']} />
           </div>
         </section>
       );
     }
 
-    // Triggers mask-row.in on initial start (instead of scroll)
-    function ManualRevealOnStart({ start }) {
+    // ============ Tilt media — 3D follows cursor ============
+    function TiltMedia({ children, label }) {
+      const ref = useRef(null);
       useEffect(() => {
-        if (!start) return;
-        document.querySelectorAll('.hero .mask-row').forEach((el) => el.classList.add('in'));
-      }, [start]);
-      return null;
-    }
-
-    // ============ Project artwork ============
-
-    // Neuronauts — gerçek logo
-    function ArtNeuronauts() {
+        const el = ref.current;
+        if (!el || matchMedia('(pointer: coarse)').matches) return;
+        const onMove = (e) => {
+          const r = el.getBoundingClientRect();
+          const px = (e.clientX - r.left) / r.width - 0.5;
+          const py = (e.clientY - r.top) / r.height - 0.5;
+          el.style.transform = `rotateY(${px * 7}deg) rotateX(${py * -7}deg)`;
+        };
+        const onLeave = () => {
+          el.style.transition = 'transform 700ms cubic-bezier(.2,.7,.2,1)';
+          el.style.transform = 'rotateY(0) rotateX(0)';
+          setTimeout(() => { el.style.transition = 'transform 200ms ease-out'; }, 700);
+        };
+        el.addEventListener('mousemove', onMove);
+        el.addEventListener('mouseleave', onLeave);
+        return () => { el.removeEventListener('mousemove', onMove); el.removeEventListener('mouseleave', onLeave); };
+      }, []);
       return (
-        <img src="/neuronauts.png" alt="Neuronauts AI"
-          style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',objectPosition:'center',display:'block'}}/>
+        <div className="tilt-wrap media-reveal">
+          <div className="project-media" ref={ref}>
+            {children}
+            <span className="project-media-label">{label}</span>
+          </div>
+        </div>
       );
     }
 
-    // 42 İstanbul — gerçek fotoğraf
-    function ArtFortyTwo() {
+    // Inner parallax image — drifts inside its frame while scrolling
+    function ParallaxImg({ src, alt, position = 'center' }) {
+      const ref = useRef(null);
+      useEffect(() => {
+        const el = ref.current;
+        if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        let raf = null;
+        const onScroll = () => {
+          if (raf) return;
+          raf = requestAnimationFrame(() => {
+            raf = null;
+            const r = el.parentElement.getBoundingClientRect();
+            const progress = (r.top + r.height/2 - innerHeight/2) / innerHeight;
+            el.style.transform = `translateY(${progress * -30}px) scale(1.12)`;
+          });
+        };
+        onScroll();
+        addEventListener('scroll', onScroll, { passive: true });
+        return () => removeEventListener('scroll', onScroll);
+      }, []);
       return (
-        <img src="/42istanbul.png" alt="42 Istanbul"
-          style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',objectPosition:'center',display:'block'}}/>
-      );
-    }
-
-    // İstanbul Aydın Üniversitesi — gerçek kampüs fotoğrafı
-    function ArtIAU() {
-      return (
-        <img src="/iau.jpg" alt="Istanbul Aydın University Campus"
-          style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',objectPosition:'center',display:'block'}}/>
-      );
-    }
-
-    // Arçelik Pazarlama — marka tipografisi + kırmızı aksan
-    function ArtArcelik() {
-      return (
-        <svg viewBox="0 0 800 1000" className="art" preserveAspectRatio="xMidYMid slice">
-          <rect width="800" height="1000" fill="#0e0f11"/>
-          {/* Subtle background grid */}
-          <g opacity="0.028" stroke="#ffffff" strokeWidth="1">
-            {Array.from({length:17},(_,i)=><line key={'v'+i} x1={i*50} y1="0" x2={i*50} y2="1000"/>)}
-            {Array.from({length:21},(_,i)=><line key={'h'+i} x1="0" y1={i*50} x2="800" y2={i*50}/>)}
-          </g>
-          {/* Brand red vertical bar */}
-          <rect x="100" y="358" width="5" height="284" fill="#cc1f1f" opacity="0.88"/>
-          {/* Main wordmark */}
-          <text x="124" y="452" fontFamily="Inter,-apple-system,sans-serif" fontSize="100" fontWeight="900" fill="rgba(255,255,255,0.92)" letterSpacing="-0.04em">Arçelik</text>
-          {/* Red underline */}
-          <rect x="124" y="466" width="200" height="3.5" fill="#cc1f1f" opacity="0.80"/>
-          {/* Sub-brand */}
-          <text x="124" y="534" fontFamily="Inter,-apple-system,sans-serif" fontSize="40" fontWeight="600" fill="rgba(255,255,255,0.42)" letterSpacing="-0.02em">Pazarlama A.Ş.</text>
-          {/* Decorative rings right */}
-          <circle cx="662" cy="500" r="182" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="1"/>
-          <circle cx="662" cy="500" r="122" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
-          <circle cx="662" cy="500" r="62" fill="rgba(204,31,31,0.06)" stroke="rgba(204,31,31,0.18)" strokeWidth="1.5"/>
-          <circle cx="662" cy="500" r="6" fill="rgba(204,31,31,0.50)"/>
-          {/* Horizontal rule */}
-          <line x1="100" y1="582" x2="700" y2="582" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
-          <text x="400" y="960" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="rgba(255,255,255,0.27)" letterSpacing="0.18em">ARÇELİK PAZARLAMA · 2022</text>
-        </svg>
+        <img ref={ref} src={src} alt={alt}
+          style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition: position, display:'block', willChange:'transform' }}/>
       );
     }
 
     // ============ Projects ============
     const PROJECTS = [
       {
-        eyebrow: 'Current · 2026',
-        index: '01',
-        prefix: 'Agentic AI for',
-        accent: 'healthcare.',
+        eyebrow: 'Current · 2026', index: '01',
+        prefix: 'Agentic AI for', accent: 'healthcare.',
         company: 'Neuronauts AI',
         body: 'Designing scalable, data-driven architectures at the intersection of AI and healthcare. Translating research into shippable applications alongside a multidisciplinary team.',
         stack: ['Python', 'Agentic AI', 'System Architecture', 'Research'],
-        link: 'neuronautsai.com',
-        href: 'https://www.neuronautsai.com/',
-        Art: ArtNeuronauts,
-        label: 'NEURONAUTS · 01',
+        link: 'neuronautsai.com', href: 'https://www.neuronautsai.com/',
+        img: '/neuronauts.png', label: 'NEURONAUTS · 01',
       },
       {
-        eyebrow: 'Current · 2025',
-        index: '02',
-        prefix: 'The long road through',
-        accent: 'C.',
+        eyebrow: 'Current · 2025', index: '02',
+        prefix: 'The long road through', accent: 'C.',
         company: '42 Istanbul',
         body: 'Working through the 42 curriculum — peer-graded software engineering with no shortcuts. Memory, pointers, shells, graphics. The kind of rigour that makes everything else feel simple.',
         stack: ['C', 'Unix', 'Make', 'Peer review'],
-        link: '42istanbul.com.tr',
-        href: 'https://42istanbul.com.tr/',
-        Art: ArtFortyTwo,
-        label: '42.IST · 02',
+        link: '42istanbul.com.tr', href: 'https://42istanbul.com.tr/',
+        img: '/42istanbul.png', label: '42.IST · 02',
       },
       {
-        eyebrow: 'University · 2024',
-        index: '03',
-        prefix: 'Web from the',
-        accent: 'metal up.',
+        eyebrow: 'University · 2024', index: '03',
+        prefix: 'Web from the', accent: 'metal up.',
         company: 'Istanbul Aydın University',
         body: 'Full-stack web from first principles: REST endpoints, normalised SQL, server-rendered PHP. The boring fundamentals that make every later framework make sense.',
         stack: ['PHP', 'SQL', 'REST / JSON', 'GitHub'],
-        link: 'aydin.edu.tr',
-        href: 'https://www.aydin.edu.tr/tr-tr/Pages/default.aspx',
-        Art: ArtIAU,
-        label: 'IAU · 03',
+        link: 'aydin.edu.tr', href: 'https://www.aydin.edu.tr/tr-tr/Pages/default.aspx',
+        img: '/iau.jpg', label: 'IAU · 03',
       },
       {
-        eyebrow: '2022 – 2023',
-        index: '04',
-        prefix: 'IT, hardware,',
-        accent: 'real users.',
+        eyebrow: '2022 – 2023', index: '04',
+        prefix: 'IT, hardware,', accent: 'real users.',
         company: 'Arçelik Pazarlama',
         body: 'Ten-month internship supporting hardware and front-line IT across departments. Diagnosed and resolved real problems, ran technical research, kept the wheels turning.',
         stack: ['Hardware', 'Diagnostics', 'IT support', 'Comms'],
-        link: 'arcelikpazarlamaas.com.tr',
-        href: 'https://www.arcelikpazarlamaas.com.tr/',
-        Art: ArtArcelik,
-        label: 'ARÇELİK · 04',
+        link: 'arcelikpazarlamaas.com.tr', href: 'https://www.arcelikpazarlamaas.com.tr/',
+        img: null, label: 'ARÇELİK · 04',
       },
     ];
 
+    // Arçelik — marka tipografisi SVG (logo görseli yatay olduğundan dikey kartta tipografik yorum)
+    function ArtArcelik() {
+      return (
+        <svg viewBox="0 0 800 1000" style={{position:'absolute',inset:0,width:'100%',height:'100%'}} preserveAspectRatio="xMidYMid slice">
+          <rect width="800" height="1000" fill="#0e0f11"/>
+          <g opacity="0.028" stroke="#ffffff" strokeWidth="1">
+            {Array.from({length:17},(_,i)=><line key={'v'+i} x1={i*50} y1="0" x2={i*50} y2="1000"/>)}
+            {Array.from({length:21},(_,i)=><line key={'h'+i} x1="0" y1={i*50} x2="800" y2={i*50}/>)}
+          </g>
+          <rect x="100" y="358" width="5" height="284" fill="#cc1f1f" opacity="0.88"/>
+          <text x="124" y="452" fontFamily="Inter,-apple-system,sans-serif" fontSize="100" fontWeight="900" fill="rgba(255,255,255,0.92)" letterSpacing="-0.04em">Arçelik</text>
+          <rect x="124" y="466" width="200" height="3.5" fill="#cc1f1f" opacity="0.80"/>
+          <text x="124" y="534" fontFamily="Inter,-apple-system,sans-serif" fontSize="40" fontWeight="600" fill="rgba(255,255,255,0.42)" letterSpacing="-0.02em">Pazarlama A.Ş.</text>
+          <circle cx="662" cy="500" r="182" fill="none" stroke="rgba(255,255,255,0.04)" strokeWidth="1"/>
+          <circle cx="662" cy="500" r="122" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
+          <circle cx="662" cy="500" r="62" fill="rgba(204,31,31,0.06)" stroke="rgba(204,31,31,0.18)" strokeWidth="1.5"/>
+          <circle cx="662" cy="500" r="6" fill="rgba(204,31,31,0.50)"/>
+          <line x1="100" y1="582" x2="700" y2="582" stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>
+          <text x="400" y="960" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="rgba(255,255,255,0.27)" letterSpacing="0.18em">ARÇELİK PAZARLAMA · 2022</text>
+        </svg>
+      );
+    }
+
     function Project({ p, i }) {
       const reverse = i % 2 === 1;
-      const Art = p.Art;
       return (
         <article className={`project ${reverse ? 'reverse' : ''}`}>
           <div className="project-index">{p.index} / 04</div>
-          <div className="project-media reveal">
-            <Art />
-            <span className="project-media-label">{p.label}</span>
-          </div>
+          <TiltMedia label={p.label}>
+            {p.img
+              ? <ParallaxImg src={p.img} alt={p.company} />
+              : <ArtArcelik />}
+          </TiltMedia>
           <div className="project-text">
             <span className="eyebrow reveal">{p.eyebrow} · {p.company}</span>
-            <h3 className="reveal d1">
-              <span className="serif">{p.prefix}</span><br />
-              {p.accent}
-            </h3>
+            <h3 className="reveal d1"><span className="serif">{p.prefix}</span><br />{p.accent}</h3>
             <p className="reveal d2">{p.body}</p>
             <div className="project-stack reveal d3">
               {p.stack.map((s) => <span className="chip" key={s}>{s}</span>)}
@@ -1115,13 +970,8 @@
         <section className="projects" id="work">
           <div className="container">
             <header className="section-head">
-              <div>
-                <div className="eyebrow reveal">Selected · 2022 / 2026</div>
-              </div>
-              <h2 className="reveal d1">
-                Four chapters,<br />
-                <span className="serif">one trajectory.</span>
-              </h2>
+              <div><div className="eyebrow reveal">Selected · 2022 / 2026</div></div>
+              <h2 className="reveal d1">Four chapters,<br /><span className="serif">one trajectory.</span></h2>
             </header>
             {PROJECTS.map((p, i) => <Project key={i} p={p} i={i} />)}
           </div>
@@ -1136,15 +986,13 @@
           <div className="container">
             <div className="eyebrow reveal">About</div>
             <div className="about-grid">
-              <div className="about-photo reveal">
-                <img src="/ege.jpg" alt="Ege Aydın"
-                  style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',objectPosition:'center 15%',display:'block'}}/>
+              <div className="tilt-wrap media-reveal">
+                <div className="about-photo">
+                  <ParallaxImg src="/ege.jpg" alt="Ege Aydın" position="center 15%" />
+                </div>
               </div>
               <div className="about-text">
-                <h2 className="reveal">
-                  A student engineer,<br />
-                  <span className="serif">learning out loud.</span>
-                </h2>
+                <h2 className="reveal">A student engineer,<br /><span className="serif">learning out loud.</span></h2>
                 <p className="reveal d1">
                   I'm <strong>Ege</strong>, born and based in Istanbul. I'm studying
                   Software Development at Istanbul Aydın University and Software Engineering
@@ -1162,8 +1010,8 @@
                   or losing at table tennis.
                 </p>
                 <div className="about-stats reveal d4">
-                  <div className="stat"><div className="n">2005<span className="serif">.</span></div><div className="l">Year of birth</div></div>
-                  <div className="stat"><div className="n">02</div><div className="l">Schools in parallel</div></div>
+                  <div className="stat"><div className="n"><CountUp to={2005} /><span className="serif">.</span></div><div className="l">Year of birth</div></div>
+                  <div className="stat"><div className="n">0<CountUp to={2} /></div><div className="l">Schools in parallel</div></div>
                   <div className="stat"><div className="n">B<span className="serif">2</span></div><div className="l">English level</div></div>
                 </div>
               </div>
@@ -1201,28 +1049,41 @@
       )},
     ];
 
+    function Skill({ s, i }) {
+      const ref = useRef(null);
+      const glowRef = useRef(null);
+      useEffect(() => {
+        const el = ref.current, glow = glowRef.current;
+        if (!el || matchMedia('(pointer: coarse)').matches) return;
+        const onMove = (e) => {
+          const r = el.getBoundingClientRect();
+          glow.style.left = (e.clientX - r.left) + 'px';
+          glow.style.top = (e.clientY - r.top) + 'px';
+        };
+        el.addEventListener('mousemove', onMove);
+        return () => el.removeEventListener('mousemove', onMove);
+      }, []);
+      return (
+        <div className="skill reveal" ref={ref} style={{ transitionDelay: `${(i % 4) * 80}ms` }}>
+          <div className="skill-glow" ref={glowRef}></div>
+          <span className="skill-num">{String(i+1).padStart(2,'0')}</span>
+          <div className="skill-icon">{s.icon}</div>
+          <h4>{s.name}</h4>
+          <p>{s.note}</p>
+        </div>
+      );
+    }
+
     function Skills() {
       return (
         <section className="skills" id="skills">
           <div className="container">
             <header className="section-head">
-              <div>
-                <div className="eyebrow reveal">The toolkit</div>
-              </div>
-              <h2 className="reveal d1">
-                What I work with,<br />
-                <span className="serif">today.</span>
-              </h2>
+              <div><div className="eyebrow reveal">The toolkit</div></div>
+              <h2 className="reveal d1">What I work with,<br /><span className="serif">today.</span></h2>
             </header>
             <div className="skills-grid">
-              {SKILLS.map((s, i) => (
-                <div className="skill reveal" style={{ transitionDelay: `${(i % 4) * 80}ms` }} key={s.name}>
-                  <span className="skill-num">{String(i+1).padStart(2,'0')}</span>
-                  <div className="skill-icon">{s.icon}</div>
-                  <h4>{s.name}</h4>
-                  <p>{s.note}</p>
-                </div>
-              ))}
+              {SKILLS.map((s, i) => <Skill s={s} i={i} key={s.name} />)}
             </div>
           </div>
         </section>
@@ -1231,15 +1092,30 @@
 
     // ============ Contact ============
     function Contact() {
+      const bgRef = useRef(null);
+      useEffect(() => {
+        const el = bgRef.current;
+        if (!el || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+        let raf = null;
+        const onScroll = () => {
+          if (raf) return;
+          raf = requestAnimationFrame(() => {
+            raf = null;
+            const r = el.parentElement.getBoundingClientRect();
+            const progress = Math.max(0, Math.min(1, 1 - r.top / innerHeight));
+            el.style.transform = `scale(${1.15 - progress * 0.12}) translateY(${(1-progress) * 40}px)`;
+          });
+        };
+        onScroll();
+        addEventListener('scroll', onScroll, { passive: true });
+        return () => removeEventListener('scroll', onScroll);
+      }, []);
       return (
         <section className="contact" id="contact">
-          <div className="contact-bg"></div>
+          <div className="contact-photo" ref={bgRef}></div>
           <div className="container">
             <div className="eyebrow reveal" style={{ justifyContent: 'center' }}>Let's talk</div>
-            <h2 className="reveal d1" style={{ marginTop: 24 }}>
-              Have something<br />
-              <span className="serif">worth building?</span>
-            </h2>
+            <h2 className="reveal d1" style={{ marginTop: 24 }}>Have something<br /><span className="serif">worth building?</span></h2>
             <p className="reveal d2">
               I'm open to internships, collaborations and interesting problems —
               especially anything at the seam of AI, systems and the real world.
@@ -1262,14 +1138,11 @@
       return (
         <footer>
           <div className="container">
-            <div className="footer-name">
-              <span>Ege</span>
-              <span>Aydın.</span>
-            </div>
+            <div className="footer-name"><span>Ege</span><span>Aydın.</span></div>
             <div className="footer-inner">
               <div>© 2026 · Istanbul, TR</div>
               <div style={{ textAlign: 'center' }}>Designed &amp; built end-to-end</div>
-              <div style={{ textAlign: 'right' }}>Last updated May 2026</div>
+              <div style={{ textAlign: 'right' }}>Last updated June 2026</div>
             </div>
           </div>
         </footer>
