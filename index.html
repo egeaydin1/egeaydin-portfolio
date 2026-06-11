@@ -23,12 +23,16 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; color: var(--ink); }
   html { background: var(--bg-2); scroll-behavior: smooth; }
-  body {
+  /* background-attachment:fixed yerine sabit katman — scroll'da repaint maliyetini sıfırlar */
+  .bgfx {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
     background:
       radial-gradient(120% 80% at 20% 0%, rgba(255,255,255,0.04), transparent 60%),
       radial-gradient(100% 80% at 80% 100%, rgba(255,255,255,0.025), transparent 50%),
       linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 50%, var(--bg-3) 100%);
-    background-attachment: fixed;
+  }
+  body {
+    background: var(--bg-2);
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
@@ -80,11 +84,25 @@
   .pre-name {
     font-family: 'Instrument Serif', serif; font-style: italic;
     font-size: clamp(56px, 12vw, 160px); letter-spacing: -0.04em; line-height: 1;
+    position: relative; overflow: hidden;
   }
-  .pre-name .word { display: inline-block; overflow: hidden; vertical-align: bottom; }
-  .pre-name .word span { display: inline-block; transform: translateY(110%); animation: preRise 800ms cubic-bezier(.2,.7,.2,1) forwards; }
-  .pre-name .word.w2 span { animation-delay: 160ms; }
-  @keyframes preRise { to { transform: translateY(0); } }
+  .pre-name .word {
+    display: inline-block; overflow: hidden; vertical-align: bottom;
+    padding-bottom: 0.1em; margin-bottom: -0.1em; /* descender ('y','g') kırpılmasın */
+  }
+  .pre-name .ltr {
+    display: inline-block; opacity: 0;
+    transform: translateY(120%) rotate(8deg); transform-origin: bottom left;
+    animation: preLtr 850ms cubic-bezier(.2,.7,.2,1) forwards;
+  }
+  @keyframes preLtr { to { opacity: 1; transform: translateY(0) rotate(0); } }
+  .pre-name::after {
+    content: ""; position: absolute; top: 0; bottom: 0; width: 70px; left: -15%;
+    background: linear-gradient(100deg, transparent, rgba(255,255,255,0.4), transparent);
+    filter: blur(8px); transform: skewX(-14deg);
+    opacity: 0; animation: preSweep 1100ms ease-in-out 1000ms forwards;
+  }
+  @keyframes preSweep { 0% { left: -15%; opacity: 1; } 100% { left: 110%; opacity: 0; } }
   .pre-num { margin-top: 24px; font-size: 11px; letter-spacing: 0.2em; opacity: 0.6; }
 
   /* ============ NAV ============ */
@@ -156,8 +174,11 @@
   .media-reveal { opacity: 0; transform: translateY(24px) scale(0.97); transition: opacity 1200ms cubic-bezier(.2,.7,.2,1), transform 1200ms cubic-bezier(.2,.7,.2,1); }
   .media-reveal.in { opacity: 1; transform: translateY(0) scale(1); }
 
-  .mask-row { overflow: hidden; line-height: 1.05; }
-  .mask-row > span { display: inline-block; transform: translateY(110%); transition: transform 1100ms cubic-bezier(.2,.7,.2,1); }
+  .mask-row {
+    overflow: hidden; line-height: 1.05;
+    padding-bottom: 0.12em; margin-bottom: -0.12em; /* descender'lar kırpılmasın */
+  }
+  .mask-row > span { display: inline-block; transform: translateY(115%); transition: transform 1100ms cubic-bezier(.2,.7,.2,1); }
   .mask-row.in > span { transform: translateY(0); }
 
   @media (prefers-reduced-motion: reduce) {
@@ -241,9 +262,16 @@
   .hero-headline .row { display: block; }
   .hero-headline .serif { font-weight: 400; color: var(--ink-soft); }
 
-  .rotator { display: inline-block; position: relative; vertical-align: bottom; height: 1em; overflow: hidden; }
-  .rotator-track { display: inline-block; transition: transform 720ms cubic-bezier(.85,0,.15,1); }
-  .rotator-word { display: block; line-height: 1; }
+  /* Rotator — crossfade: em-bazlı kaydırma yerine üst üste kelimeler (taşma/kaybolma yok) */
+  .rotator { display: inline-block; position: relative; white-space: nowrap; }
+  .rotator-ghost { visibility: hidden; }
+  .rotator-word {
+    position: absolute; left: 0; top: 0;
+    opacity: 0; transform: translateY(0.35em);
+    transition: opacity 460ms ease, transform 560ms cubic-bezier(.2,.7,.2,1);
+    will-change: transform, opacity;
+  }
+  .rotator-word.on { opacity: 1; transform: translateY(0); }
 
   .hero-bottom { margin-top: 60px; display: grid; grid-template-columns: 1.2fr 1fr; gap: 60px; align-items: end; }
   .hero-sub {
@@ -282,7 +310,7 @@
     display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
     align-items: center; padding: 80px 0; position: relative;
   }
-  .project.reverse .project-media { order: 2; }
+  .project.reverse .tilt-wrap { order: 2; }
   .project.reverse .project-text { order: 1; }
   .project-index {
     position: absolute; top: 40px;
@@ -326,7 +354,7 @@
   }
   @media (max-width: 860px) {
     .project, .project.reverse { grid-template-columns: 1fr; gap: 36px; padding: 56px 0; }
-    .project.reverse .project-media { order: 1; }
+    .project.reverse .tilt-wrap { order: 1; }
     .project.reverse .project-text { order: 2; }
     .project-media { aspect-ratio: 4/3; }
     .project-index { display: none; }
@@ -452,6 +480,7 @@
 </style>
 </head>
 <body>
+  <div class="bgfx"></div>
   <div class="cursor" id="cursor"></div>
   <div class="cursor-trail" id="cursor-trail"></div>
   <div class="scroll-progress" id="scrollProgress"></div>
@@ -460,7 +489,7 @@
     <div>EGE.AYDIN / 2026</div>
     <div class="pre-center">
       <div class="pre-name">
-        <span class="word w1"><span>Ege</span></span>&nbsp;<span class="word w2"><span>Aydın</span></span>
+        <span class="word"><span class="ltr" style="animation-delay:0ms">E</span><span class="ltr" style="animation-delay:55ms">g</span><span class="ltr" style="animation-delay:110ms">e</span></span>&nbsp;<span class="word"><span class="ltr" style="animation-delay:240ms">A</span><span class="ltr" style="animation-delay:295ms">y</span><span class="ltr" style="animation-delay:350ms">d</span><span class="ltr" style="animation-delay:405ms">ı</span><span class="ltr" style="animation-delay:460ms">n</span></span>
       </div>
       <div class="pre-num" id="preNum">0%</div>
     </div>
@@ -469,8 +498,8 @@
 
   <div id="root"></div>
 
-  <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
-  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react@18.3.1/umd/react.production.min.js" crossorigin="anonymous"></script>
+  <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" crossorigin="anonymous"></script>
   <script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
 
   <script>
@@ -668,32 +697,20 @@
       );
     }
 
-    // ============ Rotator ============
+    // ============ Rotator — crossfade ============
     function Rotator({ words, interval = 2200 }) {
       const [i, setI] = useState(0);
-      const trackRef = useRef(null);
-      const [maxW, setMaxW] = useState(null);
-      useEffect(() => {
-        const probe = document.createElement('span');
-        const styles = getComputedStyle(trackRef.current || document.body);
-        probe.style.cssText = 'position:absolute;visibility:hidden;white-space:nowrap';
-        probe.style.font = styles.font;
-        probe.style.letterSpacing = styles.letterSpacing;
-        document.body.appendChild(probe);
-        let mw = 0;
-        words.forEach((w) => { probe.textContent = w; mw = Math.max(mw, probe.getBoundingClientRect().width); });
-        document.body.removeChild(probe);
-        setMaxW(mw);
-      }, []);
       useEffect(() => {
         const id = setInterval(() => setI((p) => (p + 1) % words.length), interval);
         return () => clearInterval(id);
       }, [words.length, interval]);
+      const longest = words.reduce((a, b) => (b.length > a.length ? b : a));
       return (
-        <span className="rotator" style={{ width: maxW ? `${maxW}px` : 'auto' }}>
-          <span ref={trackRef} className="rotator-track" style={{ transform: `translateY(-${i}em)` }}>
-            {words.map((w, k) => <span className="rotator-word" key={k}>{w}</span>)}
-          </span>
+        <span className="rotator">
+          <span className="rotator-ghost">{longest}</span>
+          {words.map((w, k) => (
+            <span key={k} className={`rotator-word ${k === i ? 'on' : ''}`}>{w}</span>
+          ))}
         </span>
       );
     }
@@ -748,6 +765,7 @@
         let sx = 0, mx = 0, my = 0, raf = null;
         const apply = () => {
           raf = null;
+          if (sx > innerHeight * 1.3) return; // hero ekran dışı: transform yazma
           el.style.transform = `translateY(${sx * 0.35}px) translate(${mx}px,${my}px) scale(1.08)`;
         };
         const onScroll = () => { sx = scrollY; if (!raf) raf = requestAnimationFrame(apply); };
@@ -863,6 +881,7 @@
           raf = requestAnimationFrame(() => {
             raf = null;
             const r = el.parentElement.getBoundingClientRect();
+            if (r.bottom < -120 || r.top > innerHeight + 120) return; // ekran dışı: hesaplama yok
             const progress = (r.top + r.height/2 - innerHeight/2) / innerHeight;
             el.style.transform = `translateY(${progress * -30}px) scale(1.12)`;
           });
@@ -872,7 +891,7 @@
         return () => removeEventListener('scroll', onScroll);
       }, []);
       return (
-        <img ref={ref} src={src} alt={alt}
+        <img ref={ref} src={src} alt={alt} loading="lazy" decoding="async"
           style={{ position:'absolute', inset:0, width:'100%', height:'100%', objectFit:'cover', objectPosition: position, display:'block', willChange:'transform' }}/>
       );
     }
@@ -1102,6 +1121,7 @@
           raf = requestAnimationFrame(() => {
             raf = null;
             const r = el.parentElement.getBoundingClientRect();
+            if (r.bottom < -120 || r.top > innerHeight + 120) return;
             const progress = Math.max(0, Math.min(1, 1 - r.top / innerHeight));
             el.style.transform = `scale(${1.15 - progress * 0.12}) translateY(${(1-progress) * 40}px)`;
           });
