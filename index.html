@@ -280,6 +280,11 @@
   }
   .hero-sub strong { font-family: 'Inter', sans-serif; font-style: normal; font-weight: 600; }
   .hero-actions { justify-self: end; display: flex; flex-direction: column; gap: 20px; align-items: flex-end; }
+  .hero-build {
+    font-size: 14px; font-weight: 500; color: var(--ink-soft);
+    margin-bottom: 16px; text-align: right; max-width: 380px; line-height: 1.5;
+  }
+  @media (max-width: 860px) { .hero-build { text-align: left; } }
   @media (max-width: 860px) {
     .hero-bottom { grid-template-columns: 1fr; gap: 32px; }
     .hero-actions { justify-self: start; align-items: flex-start; }
@@ -790,11 +795,11 @@
             <div className="hero-top">
               <div className="hero-tag">
                 <span className="num">001 / PORTFOLIO</span>
-                <span>Software engineer · Istanbul</span>
+                <span>Software engineer · Full-stack · AI · Systems</span>
               </div>
               <div className="hero-tag" style={{ textAlign: 'right', alignItems: 'flex-end' }}>
                 <span className="num">EST. 2005</span>
-                <span>Available for collaborations</span>
+                <span>Available for full-time &amp; collaborations</span>
               </div>
             </div>
 
@@ -815,6 +820,7 @@
               </p>
               <div className="hero-actions mask-row" style={{ transitionDelay: '440ms' }}>
                 <span>
+                  <p className="hero-build">I build complete systems — full-stack, AI-integrated, production-ready.</p>
                   <div className="btn-row">
                     <MagneticBtn href="#work" className="btn primary" onClick={(e) => { e.preventDefault(); document.getElementById('work').scrollIntoView({behavior:'smooth'}); }}>
                       <span>See the work</span><span className="arrow">→</span>
@@ -897,13 +903,70 @@
     }
 
     // ============ Projects ============
+    // Garson AI — QR + voice waveform sanatı
+    function ArtGarson() {
+      const bars = [22,46,78,120,165,120,200,150,95,180,135,75,160,110,58,38,24];
+      return (
+        <svg viewBox="0 0 800 1000" style={{position:'absolute',inset:0,width:'100%',height:'100%'}} preserveAspectRatio="xMidYMid slice">
+          <rect width="800" height="1000" fill="#101113"/>
+          <g opacity="0.03" stroke="#fff" strokeWidth="1">
+            {Array.from({length:17},(_,i)=><line key={'v'+i} x1={i*50} y1="0" x2={i*50} y2="1000"/>)}
+            {Array.from({length:21},(_,i)=><line key={'h'+i} x1="0" y1={i*50} x2="800" y2={i*50}/>)}
+          </g>
+          {/* QR finder köşeleri */}
+          <g stroke="rgba(255,255,255,0.5)" strokeWidth="3" fill="none">
+            <rect x="92" y="142" width="74" height="74" rx="10"/>
+            <rect x="634" y="142" width="74" height="74" rx="10"/>
+            <rect x="92" y="784" width="74" height="74" rx="10"/>
+          </g>
+          <g fill="rgba(255,255,255,0.7)">
+            <rect x="115" y="165" width="28" height="28" rx="5"/>
+            <rect x="657" y="165" width="28" height="28" rx="5"/>
+            <rect x="115" y="807" width="28" height="28" rx="5"/>
+          </g>
+          {/* Ses dalgası */}
+          <g>
+            {bars.map((h,i)=>(
+              <rect key={i} x={170+i*28} y={500-h/2} width="12" height={h} rx="6" fill="#fff" fillOpacity={0.25+(h/200)*0.65}/>
+            ))}
+          </g>
+          <text x="400" y="930" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="rgba(255,255,255,0.27)" letterSpacing="0.18em">GARSON AI · QR MENU + VOICE</text>
+        </svg>
+      );
+    }
+
+    // Infrastructure — container stack sanatı
+    function ArtInfra() {
+      const slabs = [0,1,2,3,4];
+      return (
+        <svg viewBox="0 0 800 1000" style={{position:'absolute',inset:0,width:'100%',height:'100%'}} preserveAspectRatio="xMidYMid slice">
+          <rect width="800" height="1000" fill="#0e0f12"/>
+          <g opacity="0.03" stroke="#fff" strokeWidth="1">
+            {Array.from({length:17},(_,i)=><line key={'v'+i} x1={i*50} y1="0" x2={i*50} y2="1000"/>)}
+          </g>
+          {/* Rack çubuğu */}
+          <line x1="400" y1="120" x2="400" y2="270" stroke="rgba(255,255,255,0.18)" strokeWidth="1.5"/>
+          {slabs.map((i)=>(
+            <g key={i} transform={`translate(150 ${290+i*98})`}>
+              <rect width="500" height="72" rx="14" fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.14)" strokeWidth="1.2"/>
+              <circle cx="44" cy="36" r="5" fill={i===0?'#34c759':'rgba(255,255,255,0.5)'}/>
+              <rect x="76" y="30" width={210-i*22} height="11" rx="5.5" fill="rgba(255,255,255,0.16)"/>
+              <rect x="412" y="24" width="56" height="24" rx="12" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="1"/>
+              <text x="440" y="40" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="rgba(255,255,255,0.45)">:{[80,443,5678,9000,7777][i]}</text>
+            </g>
+          ))}
+          <text x="400" y="930" textAnchor="middle" fontFamily="JetBrains Mono, monospace" fontSize="11" fill="rgba(255,255,255,0.27)" letterSpacing="0.18em">SELF-HOSTED · 75+ WORKFLOWS · 24/7</text>
+        </svg>
+      );
+    }
+
     const PROJECTS = [
       {
         eyebrow: 'Current · 2026', index: '01',
         prefix: 'Agentic AI for', accent: 'healthcare.',
         company: 'Neuronauts AI',
-        body: 'Designing scalable, data-driven architectures at the intersection of AI and healthcare. Translating research into shippable applications alongside a multidisciplinary team.',
-        stack: ['Python', 'Agentic AI', 'System Architecture', 'Research'],
+        body: 'PathoFlow AI digital pathology platform. TEKNOFEST 2026 healthcare AI — XGBoost/LightGBM ensemble, SHAP explainability, ClinVar/gnomAD data pipeline. Translating research into shippable applications alongside a multidisciplinary team.',
+        stack: ['Python', 'Agentic AI', 'XGBoost / LightGBM', 'SHAP', 'System Architecture'],
         link: 'neuronautsai.com', href: 'https://www.neuronautsai.com/',
         img: '/neuronauts.png', label: 'NEURONAUTS · 01',
       },
@@ -917,22 +980,40 @@
         img: '/42istanbul.png', label: '42.IST · 02',
       },
       {
-        eyebrow: 'University · 2024', index: '03',
+        eyebrow: 'Startup · 2025', index: '03',
+        prefix: 'Restaurant tech,', accent: 'from zero.',
+        company: 'Garson AI',
+        body: 'Co-founded Garson AI — QR menu system + AI voice assistant. Led 5-person team. Completed Bilişim Vadisi GO Path Pre-Incubation Program.',
+        stack: ['FastAPI', 'Next.js', 'AI Voice', 'LLM', 'Startup'],
+        link: 'github.com/egeaydin1', href: 'https://github.com/egeaydin1',
+        img: null, Art: ArtGarson, label: 'GARSON AI · 03',
+      },
+      {
+        eyebrow: 'University · 2024', index: '04',
         prefix: 'Web from the', accent: 'metal up.',
         company: 'Istanbul Aydın University',
         body: 'Full-stack web from first principles: REST endpoints, normalised SQL, server-rendered PHP. The boring fundamentals that make every later framework make sense.',
         stack: ['PHP', 'SQL', 'REST / JSON', 'GitHub'],
         link: 'aydin.edu.tr', href: 'https://www.aydin.edu.tr/tr-tr/Pages/default.aspx',
-        img: '/iau.jpg', label: 'IAU · 03',
+        img: '/iau.jpg', label: 'IAU · 04',
       },
       {
-        eyebrow: '2022 – 2023', index: '04',
+        eyebrow: 'Ongoing · 2024 →', index: '05',
+        prefix: 'The stack that runs', accent: 'everything.',
+        company: 'Self-hosted',
+        body: 'Self-hosted infrastructure built from scratch — Coolify, Portainer, CasaOS, Railway deployments, n8n workflow automation (75+ workflows). Uptime, recovery, real ops.',
+        stack: ['Docker', 'Linux', 'Self-Hosting', 'n8n', 'DevOps'],
+        link: 'ssh.egeaydin1.com.tr', href: 'https://ssh.egeaydin1.com.tr/',
+        img: null, Art: ArtInfra, label: 'INFRASTRUCTURE · 05',
+      },
+      {
+        eyebrow: '2022 – 2023', index: '06',
         prefix: 'IT, hardware,', accent: 'real users.',
         company: 'Arçelik Pazarlama',
         body: 'Ten-month internship supporting hardware and front-line IT across departments. Diagnosed and resolved real problems, ran technical research, kept the wheels turning.',
         stack: ['Hardware', 'Diagnostics', 'IT support', 'Comms'],
         link: 'arcelikpazarlamaas.com.tr', href: 'https://www.arcelikpazarlamaas.com.tr/',
-        img: null, label: 'ARÇELİK · 04',
+        img: null, Art: ArtArcelik, label: 'ARÇELİK · 06',
       },
     ];
 
@@ -963,11 +1044,11 @@
       const reverse = i % 2 === 1;
       return (
         <article className={`project ${reverse ? 'reverse' : ''}`}>
-          <div className="project-index">{p.index} / 04</div>
+          <div className="project-index">{p.index} / 06</div>
           <TiltMedia label={p.label}>
             {p.img
               ? <ParallaxImg src={p.img} alt={p.company} />
-              : <ArtArcelik />}
+              : <p.Art />}
           </TiltMedia>
           <div className="project-text">
             <span className="eyebrow reveal">{p.eyebrow} · {p.company}</span>
@@ -990,7 +1071,7 @@
           <div className="container">
             <header className="section-head">
               <div><div className="eyebrow reveal">Selected · 2022 / 2026</div></div>
-              <h2 className="reveal d1">Four chapters,<br /><span className="serif">one trajectory.</span></h2>
+              <h2 className="reveal d1">Six chapters,<br /><span className="serif">one trajectory.</span></h2>
             </header>
             {PROJECTS.map((p, i) => <Project key={i} p={p} i={i} />)}
           </div>
@@ -1022,11 +1103,16 @@
                   My favourite work combines fields — research and engineering, hardware
                   and software, market and machine. I learn fast, think creatively, and
                   care about the small details that decide whether a product is forgettable
-                  or worth coming back to.
+                  or worth coming back to. <strong>I run my own homelab and self-hosted
+                  infrastructure.</strong>
                 </p>
                 <p className="reveal d3">
                   When I'm not in front of a terminal you'll find me running, swimming,
                   or losing at table tennis.
+                </p>
+                <p className="reveal d3" style={{ fontFamily: "'JetBrains Mono', monospace", fontSize: 13, letterSpacing: '0.02em', color: 'var(--ink-soft)', marginTop: 8 }}>
+                  Currently — System Architect &amp; AI Agents Lead @ Neuronauts AI ·
+                  Co-founder @ Garson AI · 42 Istanbul
                 </p>
                 <div className="about-stats reveal d4">
                   <div className="stat"><div className="n"><CountUp to={2005} /><span className="serif">.</span></div><div className="l">Year of birth</div></div>
@@ -1045,7 +1131,7 @@
       { name: 'Python', note: 'scripting · agents', icon: (
         <svg width="32" height="32" viewBox="0 0 28 28" fill="none"><path d="M4 7l5 5-5 5M24 7l-5 5 5 5M16 5l-4 18" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
       )},
-      { name: 'Agentic AI', note: 'tools · planning · evals', icon: (
+      { name: 'Agentic AI', note: 'langchain · tools · evals', icon: (
         <svg width="32" height="32" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="4" stroke="currentColor" strokeWidth="1.4"/><path d="M14 4v3M14 21v3M4 14h3M21 14h3M7 7l2 2M19 19l2 2M7 21l2-2M19 9l2-2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
       )},
       { name: 'C', note: 'memory · pointers · 42', icon: (
@@ -1053,6 +1139,30 @@
       )},
       { name: 'Web', note: 'rest · json · sql · php', icon: (
         <svg width="32" height="32" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="10" stroke="currentColor" strokeWidth="1.4"/><path d="M4 14h20M14 4c3 3 4.5 6.5 4.5 10S17 21 14 24c-3-3-4.5-6.5-4.5-10S11 7 14 4z" stroke="currentColor" strokeWidth="1.4"/></svg>
+      )},
+      { name: 'Docker', note: 'containers · compose', icon: (
+        <svg width="32" height="32" viewBox="0 0 28 28" fill="none"><rect x="4" y="13" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.4"/><rect x="11" y="13" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.4"/><rect x="18" y="13" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.4"/><rect x="11" y="6" width="5" height="5" rx="1" stroke="currentColor" strokeWidth="1.4"/><path d="M3 22h22" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
+      )},
+      { name: 'Linux', note: 'ubuntu server · ops', icon: (
+        <svg width="32" height="32" viewBox="0 0 28 28" fill="none"><rect x="3" y="4" width="22" height="20" rx="2" stroke="currentColor" strokeWidth="1.4"/><path d="M7 10l4 4-4 4M14 18h7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      )},
+      { name: 'FastAPI', note: 'python apis · async', icon: (
+        <svg width="32" height="32" viewBox="0 0 28 28" fill="none"><path d="M15 3L6 16h7l-1 9 9-13h-7l1-9z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/></svg>
+      )},
+      { name: 'Next.js', note: 'react · ssr · edge', icon: (
+        <svg width="32" height="32" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="10" stroke="currentColor" strokeWidth="1.4"/><path d="M10 9v10M10 9l8 11M18 9v6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
+      )},
+      { name: 'n8n', note: 'workflow automation · 75+', icon: (
+        <svg width="32" height="32" viewBox="0 0 28 28" fill="none"><circle cx="6" cy="14" r="3" stroke="currentColor" strokeWidth="1.4"/><circle cx="17" cy="7" r="3" stroke="currentColor" strokeWidth="1.4"/><circle cx="22" cy="20" r="3" stroke="currentColor" strokeWidth="1.4"/><path d="M8.5 12.5L14.5 8.5M8.8 15.5L19.3 19" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
+      )},
+      { name: 'PostgreSQL', note: 'schemas · queries', icon: (
+        <svg width="32" height="32" viewBox="0 0 28 28" fill="none"><ellipse cx="14" cy="7" rx="9" ry="3.5" stroke="currentColor" strokeWidth="1.4"/><path d="M5 7v14c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V7M5 14c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5" stroke="currentColor" strokeWidth="1.4"/></svg>
+      )},
+      { name: 'Nginx', note: 'reverse proxy · tls', icon: (
+        <svg width="32" height="32" viewBox="0 0 28 28" fill="none"><path d="M14 3l9.5 5.5v11L14 25l-9.5-5.5v-11L14 3z" stroke="currentColor" strokeWidth="1.4" strokeLinejoin="round"/><path d="M10 18v-8l8 8v-8" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+      )},
+      { name: 'GitHub Actions', note: 'ci / cd · pipelines', icon: (
+        <svg width="32" height="32" viewBox="0 0 28 28" fill="none"><circle cx="9" cy="9" r="6" stroke="currentColor" strokeWidth="1.4"/><path d="M7.5 9l1.5 1.5L11.5 7" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/><circle cx="20" cy="20" r="4" stroke="currentColor" strokeWidth="1.4"/><path d="M9 15v2a3 3 0 0 0 3 3h4" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
       )},
       { name: 'Architecture', note: 'systems · data flow', icon: (
         <svg width="32" height="32" viewBox="0 0 28 28" fill="none"><rect x="3" y="3" width="9" height="9" rx="1" stroke="currentColor" strokeWidth="1.4"/><rect x="16" y="3" width="9" height="9" rx="1" stroke="currentColor" strokeWidth="1.4"/><rect x="3" y="16" width="9" height="9" rx="1" stroke="currentColor" strokeWidth="1.4"/><rect x="16" y="16" width="9" height="9" rx="1" stroke="currentColor" strokeWidth="1.4"/></svg>
